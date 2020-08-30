@@ -1,10 +1,14 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller // This means that this class is a Controller
+import java.util.List;
+import java.util.Optional;
+
+@RestController // indicates that the data returned by each method will be written straight into the response body instead of rendering a template.
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
 public class StudentController {
 
@@ -13,28 +17,55 @@ public class StudentController {
     @Autowired
     private StudentRepository studentRepository;
 
-    // @RequestParam means it is a parameter from the GET or POST request
-    // @ResponseBody means the returned String is the response, not a view name
-    @PostMapping(path="/add") // Map ONLY POST Requests
+    // This returns a JSON or XML with the students
+    @GetMapping(path="/students")
     public @ResponseBody
-    String addNewStudent(@RequestParam String firstName,
-                         @RequestParam String lastName,
-                         @RequestParam String emailId){
-
-        Student s = new Student();
-        s.setFirstName(firstName);
-        s.setLastName(lastName);
-        s.setEmailId(emailId);
-
-        Student savedStudent = studentRepository.save(s);
-        return savedStudent.toString();
+    List<Student> getAllStudents(){
+        return studentRepository.findAll();
     }
 
     // This returns a JSON or XML with the students
-    @GetMapping(path="/all")
+    @GetMapping(path="/students/{id}")
     public @ResponseBody
-    Iterable<Student> getAllStudents(){
-        return studentRepository.findAll();
+    Student getOneStudent(@PathVariable Integer id){
+        Optional<Student> student = studentRepository.findById(id);
+
+        if (!student.isPresent()){
+            throw new StudentNotFoundException(id);
+        }
+
+        return student.get();
+    }
+
+    // @RequestParam means it is a parameter from the GET or POST request
+    // @ResponseBody means the returned String is the response, not a view name
+    @PostMapping(path="/students") // Map ONLY POST Requests
+    public @ResponseBody
+    Student addNewStudent(@RequestBody Student student){
+        return studentRepository.save(student);
+    }
+
+    @PutMapping("/students/{id}")
+    Student replaceStudent(@RequestBody Student newStudent, @PathVariable Integer id) {
+
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+
+        if (!optionalStudent.isPresent())
+            return null;
+//            return ResponseEntity.notFound().build();
+
+        Student prevStudent = optionalStudent.get();
+        prevStudent.setFirstName(newStudent.getFirstName());
+        prevStudent.setLastName(newStudent.getLastName());
+        prevStudent.setEmailId(newStudent.getEmailId());
+
+        return studentRepository.save(prevStudent);
+
+    }
+
+    @DeleteMapping("/students/{id}")
+    void deleteStudentById(@PathVariable Integer id) {
+        studentRepository.deleteById(id);
     }
 
 }

@@ -61,4 +61,20 @@ public class Student {
                 .add("emailId='" + emailId + "'")
                 .toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return com.google.common.base.Objects.equal(id, student.id) &&
+                com.google.common.base.Objects.equal(firstName, student.firstName) &&
+                com.google.common.base.Objects.equal(lastName, student.lastName) &&
+                com.google.common.base.Objects.equal(emailId, student.emailId);
+    }
+
+    @Override
+    public int hashCode() {
+        return com.google.common.base.Objects.hashCode(id, firstName, lastName, emailId);
+    }
 }
