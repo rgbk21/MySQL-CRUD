@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/*
+Unlike the traditional Spring @Controller annotation, the @RestController annotation doesn't require you as a developer
+to return a ResponseBody class from your method in the controller class. This is all handled by
+the presence of the @RestController annotation, which includes the @ResponseBody annotation.
+ */
 @RestController // indicates that the data returned by each method will be written straight into the response body instead of rendering a template.
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
 public class StudentController {
@@ -19,15 +24,13 @@ public class StudentController {
 
     // This returns a JSON or XML with the students
     @GetMapping(path="/students")
-    public @ResponseBody
-    List<Student> getAllStudents(){
+    public List<Student> getAllStudents(){
         return studentRepository.findAll();
     }
 
     // This returns a JSON or XML with the students
     @GetMapping(path="/students/{id}")
-    public @ResponseBody
-    Student getOneStudent(@PathVariable Integer id){
+    public Student getOneStudent(@PathVariable Integer id){
         Optional<Student> student = studentRepository.findById(id);
 
         if (!student.isPresent()){
@@ -40,8 +43,7 @@ public class StudentController {
     // @RequestParam means it is a parameter from the GET or POST request
     // @ResponseBody means the returned String is the response, not a view name
     @PostMapping(path="/students") // Map ONLY POST Requests
-    public @ResponseBody
-    Student addNewStudent(@RequestBody Student student){
+    public Student addNewStudent(@RequestBody Student student){
         return studentRepository.save(student);
     }
 
