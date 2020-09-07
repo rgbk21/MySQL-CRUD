@@ -1,12 +1,13 @@
-package com.example.demo;
+package com.example.demo.controller;
 
+import com.example.demo.repository.StudentRepository;
+import com.example.demo.model.Student;
+import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /*
 Unlike the traditional Spring @Controller annotation, the @RestController annotation doesn't require you as a developer
@@ -22,46 +23,40 @@ public class StudentController {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private StudentService studentService;
+
     // This returns a JSON or XML with the students
     @GetMapping(path="/students")
-    public List<Student> getAllStudents(){
-        return studentRepository.findAll();
+    public ResponseEntity<List<Student>> getAllStudents(){
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
     // This returns a JSON or XML with the students
     @GetMapping(path="/students/{id}")
-    public Student getOneStudent(@PathVariable Integer id){
-        Optional<Student> student = studentRepository.findById(id);
+    public ResponseEntity<Student> getStudentById(@PathVariable Integer id){
+        Student student = studentService.getStudentById(id);
 
-        if (!student.isPresent()){
+        if (student == null){
             throw new StudentNotFoundException(id);
         }
 
-        return student.get();
+        return ResponseEntity.ok(student);
     }
 
     // @RequestParam means it is a parameter from the GET or POST request
     // @ResponseBody means the returned String is the response, not a view name
     @PostMapping(path="/students") // Map ONLY POST Requests
-    public Student addNewStudent(@RequestBody Student student){
-        return studentRepository.save(student);
+    public ResponseEntity<Student> addNewStudent(@RequestBody Student student){
+        return ResponseEntity.ok(studentService.addNewStudent(student));
     }
 
     @PutMapping("/students/{id}")
-    Student replaceStudent(@RequestBody Student newStudent, @PathVariable Integer id) {
+    ResponseEntity<Student> replaceStudent(@RequestBody Student newStudent, @PathVariable Integer id) {
 
-        Optional<Student> optionalStudent = studentRepository.findById(id);
+        Student student = studentService.replaceStudent(newStudent, id);
 
-        if (!optionalStudent.isPresent())
-            return null;
-//            return ResponseEntity.notFound().build();
-
-        Student prevStudent = optionalStudent.get();
-        prevStudent.setFirstName(newStudent.getFirstName());
-        prevStudent.setLastName(newStudent.getLastName());
-        prevStudent.setEmailId(newStudent.getEmailId());
-
-        return studentRepository.save(prevStudent);
+        return ResponseEntity.ok(student);
 
     }
 
