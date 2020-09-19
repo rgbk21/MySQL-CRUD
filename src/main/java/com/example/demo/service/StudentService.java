@@ -4,6 +4,7 @@ import com.example.demo.model.Student;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,17 @@ public class StudentService {
         prevStudent.setEmailId(newStudent.getEmailId());
 
         return studentRepository.save(prevStudent);
+
+    }
+
+    public boolean deleteStudentById(Integer id) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
 
     }
 

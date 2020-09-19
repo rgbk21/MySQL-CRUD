@@ -20,6 +20,10 @@ dependencies {
 	}
 	// https://mvnrepository.com/artifact/com.google.guava/guava
 	compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-hateoas
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.3.3.RELEASE'
+
 }
 
 test {

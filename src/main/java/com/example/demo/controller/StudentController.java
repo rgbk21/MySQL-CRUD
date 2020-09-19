@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +33,12 @@ public class StudentController {
     // This returns a JSON or XML with the students
     @GetMapping(path="/students")
     public ResponseEntity<List<Student>> getAllStudents(){
-        return ResponseEntity.ok(studentService.getAllStudents());
+        List<Student> list = studentService.getAllStudents();
+        if (list != null) {
+            return ResponseEntity.ok(list);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     // This returns a JSON or XML with the students
@@ -37,9 +46,20 @@ public class StudentController {
     public ResponseEntity<Student> getStudentById(@PathVariable Integer id){
         Student student = studentService.getStudentById(id);
 
-        if (student == null){
-            throw new StudentNotFoundException(id);
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+
+//        if (student == null){
+//            throw new StudentNotFoundException(id);
+//        }
+
+        student.add(
+                linkTo(methodOn(StudentController.class).getStudentById(id)).withSelfRel(),
+                linkTo(methodOn(StudentController.class).addNewStudent(student)).withRel("addNewStudent"),
+                linkTo(methodOn(StudentController.class).replaceStudent(student, id)).withRel("replaceStudent"),
+                linkTo(methodOn(StudentController.class).deleteStudentById(id)).withRel("deleteStudentById")
+        );
 
         return ResponseEntity.ok(student);
     }
@@ -48,21 +68,25 @@ public class StudentController {
     // @ResponseBody means the returned String is the response, not a view name
     @PostMapping(path="/students") // Map ONLY POST Requests
     public ResponseEntity<Student> addNewStudent(@RequestBody Student student){
-        return ResponseEntity.ok(studentService.addNewStudent(student));
+        Student s = studentService.addNewStudent(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(s);
     }
 
     @PutMapping("/students/{id}")
     ResponseEntity<Student> replaceStudent(@RequestBody Student newStudent, @PathVariable Integer id) {
 
         Student student = studentService.replaceStudent(newStudent, id);
-
         return ResponseEntity.ok(student);
 
     }
 
     @DeleteMapping("/students/{id}")
-    void deleteStudentById(@PathVariable Integer id) {
-        studentRepository.deleteById(id);
+    ResponseEntity<String> deleteStudentById(@PathVariable Integer id) {
+        if (studentService.deleteStudentById(id)) {
+            return ResponseEntity.ok(String.format("Student with id %s deleted", id));
+        } else {
+            return ResponseEntity.ok(String.format("Student with id %s not found", id));
+        }
     }
 
 }

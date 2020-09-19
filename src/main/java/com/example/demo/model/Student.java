@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,11 +11,11 @@ import java.util.StringJoiner;
 
 // This tells Hibernate to make a table out of this class
 @Entity
-public class Student {
+public class Student extends RepresentationModel<Student> {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO,generator="native")
-    @GenericGenerator(name = "native",strategy = "native")
+    @GeneratedValue(strategy=GenerationType.AUTO, generator="native")
+    @GenericGenerator(name = "native", strategy = "native")
     private Integer id;
     private String firstName;
     private String lastName;
@@ -36,9 +37,14 @@ public class Student {
         return emailId;
     }
 
+    /*
+    Primary key values never change, so you shouldn't allow modification of the identifier property column
+
     public void setId(Integer id) {
         this.id = id;
     }
+
+    */
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
