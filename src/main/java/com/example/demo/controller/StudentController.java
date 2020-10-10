@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.example.demo.repository.StudentRepository;
+import com.example.demo.dao.StudentRepository;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
