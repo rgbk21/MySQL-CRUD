@@ -1,5 +1,6 @@
 package com.example.demo.web.controller.exceptions;
 
+import com.example.demo.web.controller.RestPreConditions.MyExceptions.APIError;
 import com.example.demo.web.controller.RestPreConditions.MyExceptions.MyBadRequestException;
 import com.google.common.base.Throwables;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.example.demo.web.controller.exceptions;
+package com.example.demo.web.controller.RestPreConditions.MyExceptions;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.MoreObjects;
