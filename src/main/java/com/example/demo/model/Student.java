@@ -1,11 +1,14 @@
 package com.example.demo.model;
 
+import com.sun.istack.NotNull;
 import org.hibernate.annotations.GenericGenerator;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.util.StringJoiner;
 
 // This tells Hibernate to make a table out of this class
@@ -16,6 +19,7 @@ public class Student {
     @GeneratedValue(strategy=GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
     private Integer id;
+    @NotBlank(message = "First Name cannot be empty")
     private String firstName;
     private String lastName;
     private String emailId;

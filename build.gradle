@@ -24,6 +24,10 @@ dependencies {
 //	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-hateoas
 //	compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.3.3.RELEASE'
 
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.3.4.RELEASE'
+
+
 }
 
 test {

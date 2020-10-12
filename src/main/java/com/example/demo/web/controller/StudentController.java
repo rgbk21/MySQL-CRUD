@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class StudentController {
     // @RequestParam means it is a parameter from the GET or POST request
     // @ResponseBody means the returned String is the response, not a view name
     @PostMapping(path="/students") // Map ONLY POST Requests
-    public ResponseEntity<Student> addNewStudent(@RequestBody Student student){
+    public ResponseEntity<Student> addNewStudent(@Validated @RequestBody Student student){
         Student s = studentService.addNewStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(s);
     }
