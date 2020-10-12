@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /*
@@ -58,7 +59,7 @@ public class StudentController {
     }
 
     @PutMapping("/students/{id}")
-    ResponseEntity<Student> replaceStudent(@RequestBody Student newStudent, @PathVariable Integer id) {
+    ResponseEntity<Student> replaceStudent(@Valid @RequestBody Student newStudent, @PathVariable Integer id) {
 
         Student student = studentService.replaceStudent(newStudent, id);
         return ResponseEntity.ok(student);

@@ -4,10 +4,7 @@ import com.sun.istack.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.StringJoiner;
 
@@ -21,6 +18,7 @@ public class Student {
     private Integer id;
     @NotBlank(message = "First Name cannot be empty")
     private String firstName;
+    @Column(unique = false, nullable = false)
     private String lastName;
     private String emailId;
 

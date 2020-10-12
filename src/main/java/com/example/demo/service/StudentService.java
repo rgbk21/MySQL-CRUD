@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.Student;
 import com.example.demo.dao.StudentRepository;
+import com.example.demo.web.controller.RestPreConditions.RestPreConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,16 @@ public class StudentService {
 
     public Student replaceStudent(Student newStudent, Integer id) {
 
+        RestPreConditions.checkRequestElementNotNull(newStudent);
+        RestPreConditions.checkRequestElementNotNull(newStudent.getId());
+        RestPreConditions.checkIfBadRequest(newStudent.getId().equals(id),
+                newStudent.getClass().getSimpleName() + " ID does not match URI ID");
+
         Optional<Student> optionalStudent = studentRepository.findById(id);
 
-        if (!optionalStudent.isPresent())
-            return null;
-//            return ResponseEntity.notFound().build();
+        if (optionalStudent.isEmpty()) {
+            RestPreConditions.checkNotNull(optionalStudent.get());
+        }
 
         Student prevStudent = optionalStudent.get();
         prevStudent.setFirstName(newStudent.getFirstName());
