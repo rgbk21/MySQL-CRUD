@@ -1,7 +1,4 @@
-package com.example.demo.controller;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+package com.example.demo.web.controller;
 
 import com.example.demo.dao.StudentRepository;
 import com.example.demo.model.Student;
@@ -9,6 +6,7 @@ import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +16,7 @@ Unlike the traditional Spring @Controller annotation, the @RestController annota
 to return a ResponseBody class from your method in the controller class. This is all handled by
 the presence of the @RestController annotation, which includes the @ResponseBody annotation.
  */
-@RestController // indicates that the data returned by each method will be written straight into the response body instead of rendering a template.
+@Controller // indicates that the data returned by each method will be written straight into the response body instead of rendering a template.
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
 public class StudentController {
 
@@ -30,38 +28,24 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    // This returns a JSON or XML with the students
-    @GetMapping(path="/students")
-    public ResponseEntity<List<Student>> getAllStudents(){
+    @RequestMapping(method = RequestMethod.GET, value = "/students")
+    @ResponseBody
+    public List<Student> getAllStudents(){
         List<Student> list = studentService.getAllStudents();
         if (list != null) {
-            return ResponseEntity.ok(list);
+            return list;
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            throw new RuntimeException();
         }
     }
 
     // This returns a JSON or XML with the students
-    @GetMapping(path="/students/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Integer id){
+    @RequestMapping(value = "/students/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Student getStudentById(@PathVariable("id") Integer id){
         Student student = studentService.getStudentById(id);
 
-        if (student == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-//        if (student == null){
-//            throw new StudentNotFoundException(id);
-//        }
-
-        student.add(
-                linkTo(methodOn(StudentController.class).getStudentById(id)).withSelfRel(),
-                linkTo(methodOn(StudentController.class).addNewStudent(student)).withRel("addNewStudent"),
-                linkTo(methodOn(StudentController.class).replaceStudent(student, id)).withRel("replaceStudent"),
-                linkTo(methodOn(StudentController.class).deleteStudentById(id)).withRel("deleteStudentById")
-        );
-
-        return ResponseEntity.ok(student);
+        return student;
     }
 
     // @RequestParam means it is a parameter from the GET or POST request

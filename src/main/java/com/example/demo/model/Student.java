@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +10,7 @@ import java.util.StringJoiner;
 
 // This tells Hibernate to make a table out of this class
 @Entity
-public class Student extends RepresentationModel<Student> {
+public class Student {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO, generator="native")

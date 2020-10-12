@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.web.controller;
 
 public class StudentNotFoundException extends RuntimeException {
 
