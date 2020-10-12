@@ -1,18 +1,24 @@
 package com.example.demo.web.controller.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+
+import java.time.LocalDateTime;
 
 public class APIError {
 
     private int status;
     private String message;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime timestamp;
     private String devMessage;
 
     public APIError(int status, String message, String devMessage) {
         this.status = status;
         this.message = message;
         this.devMessage = devMessage;
+        this.timestamp = LocalDateTime.now();
     }
 
     public int getStatus() {
@@ -39,27 +45,21 @@ public class APIError {
         this.devMessage = devMessage;
     }
 
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("status", status)
                 .add("message", message)
+                .add("timestamp", timestamp)
                 .add("devMessage", devMessage)
                 .toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        APIError apiError = (APIError) o;
-        return status == apiError.status &&
-                Objects.equal(message, apiError.message) &&
-                Objects.equal(devMessage, apiError.devMessage);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(status, message, devMessage);
     }
 }
