@@ -7,6 +7,16 @@ plugins {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+apply plugin: 'java'
+apply plugin: 'idea'
+
+idea {
+	module {
+		downloadJavadoc = true
+		downloadSources = true
+	}
+}
+
 repositories {
 	mavenCentral()
 }

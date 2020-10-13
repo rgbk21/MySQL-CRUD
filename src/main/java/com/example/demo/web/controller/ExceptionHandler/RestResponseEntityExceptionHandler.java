@@ -1,4 +1,4 @@
-package com.example.demo.web.controller.exceptions;
+package com.example.demo.web.controller.ExceptionHandler;
 
 import com.example.demo.web.controller.RestPreConditions.MyExceptions.APIError;
 import com.example.demo.web.controller.RestPreConditions.MyExceptions.MyBadRequestException;

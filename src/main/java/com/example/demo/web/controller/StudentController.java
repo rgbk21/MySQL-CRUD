@@ -41,6 +41,15 @@ public class StudentController {
         }
     }
 
+
+    @RequestMapping(value = "/students", method = RequestMethod.GET, params = { QueryConstants.PAGE, QueryConstants.SIZE })
+    @ResponseBody
+    public List<Student> getAllStudentsPaginated(@RequestParam(value = QueryConstants.PAGE) final int page, @RequestParam(value = QueryConstants.SIZE) final int size){
+        return studentService.findPaginated(page, size);
+    }
+
+
+
     // This returns a JSON or XML with the students
     @RequestMapping(value = "/students/{id}", method = RequestMethod.GET)
     @ResponseBody
