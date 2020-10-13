@@ -1,11 +1,12 @@
 package com.example.demo.model;
 
-import com.sun.istack.NotNull;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import org.hibernate.annotations.GenericGenerator;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.util.StringJoiner;
 
 // This tells Hibernate to make a table out of this class
@@ -16,10 +17,20 @@ public class Student {
     @GeneratedValue(strategy=GenerationType.AUTO, generator="native")
     @GenericGenerator(name = "native", strategy = "native")
     private Integer id;
+
     @NotBlank(message = "First Name cannot be empty")
+    @Size(min = 2, max = 32)
     private String firstName;
+
     @Column(unique = false, nullable = false)
     private String lastName;
+
+    @Min(0)
+    @Max(100)
+    @NotNull
+    private Integer age;
+
+    @Email
     private String emailId;
 
     public Integer getId() {
@@ -59,14 +70,12 @@ public class Student {
         this.emailId = emailId;
     }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Student.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("firstName='" + firstName + "'")
-                .add("lastName='" + lastName + "'")
-                .add("emailId='" + emailId + "'")
-                .toString();
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     @Override
@@ -74,14 +83,26 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return com.google.common.base.Objects.equal(id, student.id) &&
-                com.google.common.base.Objects.equal(firstName, student.firstName) &&
-                com.google.common.base.Objects.equal(lastName, student.lastName) &&
-                com.google.common.base.Objects.equal(emailId, student.emailId);
+        return Objects.equal(id, student.id) &&
+                Objects.equal(firstName, student.firstName) &&
+                Objects.equal(lastName, student.lastName) &&
+                Objects.equal(age, student.age) &&
+                Objects.equal(emailId, student.emailId);
     }
 
     @Override
     public int hashCode() {
-        return com.google.common.base.Objects.hashCode(id, firstName, lastName, emailId);
+        return Objects.hashCode(id, firstName, lastName, age, emailId);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("firstName", firstName)
+                .add("lastName", lastName)
+                .add("age", age)
+                .add("emailId", emailId)
+                .toString();
     }
 }
