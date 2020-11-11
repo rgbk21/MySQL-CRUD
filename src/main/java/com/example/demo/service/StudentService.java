@@ -58,7 +58,7 @@ public class StudentService {
 
         Optional<Student> optionalStudent = studentRepository.findById(id);
 
-        if (optionalStudent.isEmpty()) {
+        if (!optionalStudent.isPresent()) {
             RestPreConditions.checkNotNull(optionalStudent.get());
         }
 
